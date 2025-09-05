@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+import { useUser } from '../UserContext';
+import { useNavigate } from "react-router-dom";
+
 
 function SelfIntro() {
+  const { user, setUser } = useUser();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,7 +27,17 @@ function SelfIntro() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Form submitted: " + JSON.stringify(formData, null, 2));
+
+    // Save user info in context
+    setUser({
+      ...user,
+      name: formData.name,
+      skillLevel: formData.skillLevel,
+      subscription: false, // default false
+    });
+
+    // Redirect to Dashboard
+    navigate("/dashboard");
   };
 
   return (
@@ -32,15 +48,11 @@ function SelfIntro() {
           "url('https://images.wallpapersden.com/image/download/programming-coding-language_bGhpbm6UmZqaraWkpJRmbmdlrWZlbWU.jpg')",
       }}
     >
-      {/* Form container */}
       <div className="bg-white/90 p-8 rounded-2xl shadow-lg w-full max-w-3xl">
-        {/* Title */}
         <h1 className="text-3xl font-bold text-center text-[#0A192F] mb-2">
           CODRITHM
         </h1>
-        <p className="text-center text-[#0A192F] mb-6">
-          Your Personal Information
-        </p>
+        <p className="text-center text-[#0A192F] mb-6">Your Personal Information</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
@@ -152,7 +164,6 @@ function SelfIntro() {
             ></textarea>
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-[#2563EB] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#1D4ED8] transition duration-200"
